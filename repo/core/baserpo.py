@@ -1,13 +1,13 @@
 class BaseRepository:
 
     def __init__(self, context):
-        pass
+        self.__ctx = context
 
     def get(self, uid): 
-        pass
+        raise NotImplementedError()
 
     def add(self, obj):
-        pass
+        self.__ctx.add(obj)
 
     def remove(self, obj):
-        pass
+        self.__ctx.remove(obj)
