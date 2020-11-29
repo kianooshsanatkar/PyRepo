@@ -6,7 +6,7 @@ from uuid import uuid4
 
 class UnitOfWorkTest(TestCase):
 
-    def test_enter(self):
+    def test__is_enter_function_work(self):
         ctx = Mock()
         ctx.connect = Mock()
 
@@ -14,7 +14,7 @@ class UnitOfWorkTest(TestCase):
             pass
         ctx.connect.assert_called_once()
 
-    def test_exit(self):
+    def test__is_exit_function_work(self):
         ctx = Mock()
         ctx.close = Mock()
 
@@ -23,7 +23,7 @@ class UnitOfWorkTest(TestCase):
 
         ctx.close.assert_called_once()
 
-    def test_commit(self):
+    def test__is_uow_commit_call_context_commit(self):
         ctx = Mock()
         ctx.commit = Mock()
 
@@ -31,7 +31,7 @@ class UnitOfWorkTest(TestCase):
             uow.commit()
         ctx.commit.assert_called_once()
 
-    def test_connect(self):
+    def test_does_connect_call_ctx_connect(self):
         ctx = Mock()
         ctx.connect = Mock()
 
@@ -41,7 +41,11 @@ class UnitOfWorkTest(TestCase):
 
         self.assertEqual(2, ctx.connect.call_count)
 
-    def test_repo_call(self):
+    def test_is_uow_factory_and_pool_work(self):
+        """
+        call an injected repository twice and check if the values are the same,
+        because of the pool both must have the same value
+        """
         ctx = Mock()
         repo = Mock(return_value=uuid4())
         __repo_factory = {repo.__class__.__name__: repo}
