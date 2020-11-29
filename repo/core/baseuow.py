@@ -1,27 +1,41 @@
 class UnitOfWork:
 
-    def __init__(self, _contxt, factory_dict: dict, auto_commit = False):
-        super().__init__()
-        self.__ctx = _contxt
-        self.__factory = factory_dict
-        self.pool = {}
+    __repo = {}
 
-    def get_repository(self, repo):
-        """
-        get repository, eighter from pool if already built or eighther build a new one
+    @staticmethod
+    def add_repositories(repositories: dict):
+        """Add one or more repositories as dictionary
 
         Args:
-            repo ([type]): repository name to get it eigher from pool or eigher build it
+
+            repose (dict): repositories as dictionary. e.g. {'repository_class_name': RepositoryClass, ...}
+        """
+        UnitOfWork.__repo.update(repositories)
+
+    def __init__(self, _context, auto_commit=False):
+        super().__init__()
+        self.__ctx = _context
+        self.pool = {}
+
+    def get_repository(self, repo: str):
+        """get repository, either from pool if already built or eighther build a new one.
+        Any new repository will be added to the pool and in the next call will be retrieved from the pool.
+
+        Args:
+
+            repo (str): 'insert repository name to get it either from pool or either a new one'
 
         Raises:
-            KeyError: [description]
+
+            KeyError: 'Inserted Repository Name does not exist'
 
         Returns:
-            [type]: [description]
+
+            Repository: [description]
         """
         r = self.pool.get(repo)
         if not r:
-            _ = self.__factory.get(repo)
+            _ = self.__repo.get(repo)
             r = _(self.__ctx)
             self.pool[repo] = r
         if not r:

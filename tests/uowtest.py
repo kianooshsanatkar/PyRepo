@@ -44,8 +44,9 @@ class UnitOfWorkTest(TestCase):
     def test_repo_call(self):
         ctx = Mock()
         repo = Mock(return_value=uuid4())
-        factory = {repo.__class__.__name__: repo}
-        with UnitOfWork(ctx, factory) as uow:
+        __repo_factory = {repo.__class__.__name__: repo}
+        UnitOfWork.add_repositories(__repo_factory)
+        with UnitOfWork(ctx) as uow:
             r = uow.get_repository(repo.__class__.__name__)
             r2 = uow.get_repository(repo.__class__.__name__)
             self.assertEqual(r, r2)
